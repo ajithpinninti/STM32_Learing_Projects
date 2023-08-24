@@ -48,7 +48,7 @@ TIM_HandleTypeDef htim6;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+CAN_HandleTypeDef hcan1;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,14 +103,26 @@ int main(void)
   /* USER CODE BEGIN 2 */
   CAN1_Init();
 
-   CAN_Filter_config();
+  /* to receive the CAN msg need to setup acceptance filters */
+  CAN_Filter_config();
 
-   if( HAL_CAN_Start(&hcan1)!= HAL_OK){
- 	  Error_Handler();
-   }
+/*
+ * Activating Interrupts
+ */
 
-   CAN1_TX();
-   CAN1_RX();
+if(  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY |  CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_BUSOFF ) != HAL_OK){
+
+	Error_Handler();
+}
+
+  if( HAL_CAN_Start(&hcan1)!= HAL_OK){
+	  Error_Handler();
+  }
+
+  CAN1_TX();
+
+  HAL_TIM_Base_Start_IT(&htim6);
+//  CAN1_RX();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -146,9 +158,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 16;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 80;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -161,11 +173,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV4;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -226,10 +238,10 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 0;
+  htim6.Init.Prescaler = 20000-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 2000;
-  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
     Error_Handler();
@@ -319,7 +331,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 static void CAN1_Init(void){
 	hcan1.Instance = CAN1;
-	hcan1.Init.Mode = CAN_MODE_NORMAL;
+	hcan1.Init.Mode = CAN_MODE_LOOPBACK;
 	hcan1.Init.AutoBusOff = DISABLE;
 	hcan1.Init.AutoRetransmission = ENABLE;
 	hcan1.Init.AutoWakeUp = DISABLE;
@@ -336,6 +348,8 @@ static void CAN1_Init(void){
 	if(HAL_CAN_Init(&hcan1)!= HAL_OK){
 		Error_Handler();
 	}
+
+
 
 }
 
@@ -382,7 +396,6 @@ void CAN1_TX(void){
 
 	uint32_t TxMailbox;
 
-	uint8_t msg[50];
 
 	uint8_t Msg[5]= "HELLO";
 
@@ -395,10 +408,7 @@ void CAN1_TX(void){
 		Error_Handler();
 	}
 
-	while(HAL_CAN_IsTxMessagePending(&hcan1, TxMailbox));
 
-	sprintf((char*)msg,"Message Transmitted \r");
-	HAL_UART_Transmit(&huart2, msg, strlen((char*)msg), HAL_MAX_DELAY);
 
 }
 /* USER CODE END 4 */

@@ -116,7 +116,7 @@ if(  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY |  CAN_IT_RX_F
   }
 
   CAN1_TX();
-  CAN1_RX();
+//  CAN1_RX();
   /* USER CODE END 2 */
 
   /* Infinite loop */

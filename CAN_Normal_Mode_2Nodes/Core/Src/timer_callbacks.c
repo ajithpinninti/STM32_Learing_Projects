@@ -5,8 +5,13 @@
  *      Author: Ajith Pinninti
  */
 
+#include "main.h"
 
-void HAL_TIM_PeriodElapsedCallback(void){
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
 
-
+	int I=8;
+	I++;
+	I--;
+	//for testing
 }

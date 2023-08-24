@@ -74,6 +74,7 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
+void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan);
 
 /* USER CODE END Private defines */
 

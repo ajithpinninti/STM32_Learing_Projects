@@ -213,5 +213,23 @@ void TIM6_DAC_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+extern CAN_HandleTypeDef hcan1;
+
+void CAN1_TX_IRQHandler(void){
+
+	HAL_CAN_IRQHandler(&hcan1);
+}
+void CAN1_RX0_IRQHandler(void){
+
+	HAL_CAN_IRQHandler(&hcan1);
+}
+void CAN1_RX1_IRQHandler(void){
+
+	HAL_CAN_IRQHandler(&hcan1);
+}
+void CAN1_SCE_IRQHandler(void){
+
+	HAL_CAN_IRQHandler(&hcan1);
+}
 
 /* USER CODE END 1 */

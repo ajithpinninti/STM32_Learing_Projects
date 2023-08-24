@@ -109,7 +109,15 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* hcan)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN CAN1_MspInit 1 */
+	HAL_NVIC_SetPriority(CAN1_TX_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(CAN1_RX0_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(CAN1_RX1_IRQn, 15, 0);
+	HAL_NVIC_SetPriority(CAN1_SCE_IRQn, 15, 0);
 
+	HAL_NVIC_EnableIRQ(CAN1_TX_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX0_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_RX1_IRQn);
+	HAL_NVIC_EnableIRQ(CAN1_SCE_IRQn);
   /* USER CODE END CAN1_MspInit 1 */
   }
 
