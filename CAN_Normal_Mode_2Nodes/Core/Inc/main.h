@@ -36,7 +36,8 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-	extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart2;
+extern	CAN_HandleTypeDef hcan1;
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -73,7 +74,7 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan);
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
