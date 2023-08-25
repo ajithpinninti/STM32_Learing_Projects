@@ -123,7 +123,8 @@ if(  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_TX_MAILBOX_EMPTY |  CAN_IT_RX_F
 	  Error_Handler();
   }
 
-
+/* starting debug timer (TIM13) */
+HAL_TIM_Base_Start_IT(&htim13);
 //  HAL_TIM_Base_Start_IT(&htim6); // done in push button EXTI
 //  CAN1_RX();
   /* USER CODE END 2 */
@@ -243,7 +244,7 @@ static void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 20000-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 2000;
+  htim6.Init.Period = 20;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -277,7 +278,7 @@ static void MX_TIM13_Init(void)
 
   /* USER CODE END TIM13_Init 1 */
   htim13.Instance = TIM13;
-  htim13.Init.Prescaler = 10-1;
+  htim13.Init.Prescaler = 20-1;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim13.Init.Period = 65535;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -457,7 +458,7 @@ void CAN_MSG_TX(void){
 	uint8_t msg;
 
 	TxHeader.DLC = 1; //msg number
-	TxHeader.StdId = 0x5D;
+	TxHeader.StdId = 0x65D;
 	TxHeader.IDE = CAN_ID_STD;
 	TxHeader.RTR = CAN_RTR_DATA;
 

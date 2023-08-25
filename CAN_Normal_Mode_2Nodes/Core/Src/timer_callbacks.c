@@ -10,8 +10,8 @@
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 
-	int I=8;
-	I++;
-	I--;
-	//for testing
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin); //light will toggle for every tranmission
+//	  CAN1_TX(); // sending command for every 2 seconds
+	CAN_MSG_TX(); //sending LED number for every 2 seconds
+
 }

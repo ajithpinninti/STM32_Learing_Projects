@@ -39,6 +39,8 @@ extern "C" {
 extern UART_HandleTypeDef huart2;
 extern	CAN_HandleTypeDef hcan1;
 extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim13;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

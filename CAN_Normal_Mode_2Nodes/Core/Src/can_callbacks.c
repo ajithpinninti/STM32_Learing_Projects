@@ -37,15 +37,18 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
 
 	CAN_RxHeaderTypeDef RxHeader;
 
-	uint8_t rcvd_msg[5];
+	uint8_t rcvd_msg[5]; // for hello string
+	uint8_t recv_int8_t; // for number receving
+
 	char msg[50];
 
 
-	if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, rcvd_msg)!= HAL_OK){
+	if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, &recv_int8_t)!= HAL_OK){
 		Error_Handler();
 	}
 
-	sprintf(msg,"Receieved: %s \r\n",rcvd_msg);
+
+	sprintf(msg,"Receieved: %d \r\n",recv_int8_t);
 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg),HAL_MAX_DELAY);
 }
 
